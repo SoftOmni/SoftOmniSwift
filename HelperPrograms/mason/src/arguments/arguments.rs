@@ -196,6 +196,10 @@ impl Arguments {
         self.max_depth
     }
 
+    pub fn verbose(&self) -> bool {
+        self.verbose_output
+    }
+
     fn glob_check(&self, file_name: &str) -> bool {
         self.glob.matches(file_name)
     }
