@@ -2,6 +2,7 @@ use glob;
 use regex::Regex;
 use std::cmp::PartialEq;
 use std::env;
+use std::fmt::{Display, Formatter};
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
@@ -31,6 +32,19 @@ pub enum SortingOrder {
 impl PartialEq for SortingOrder {
     fn eq(&self, other: &Self) -> bool {
         self == other
+    }
+}
+
+impl Display for SortingOrder {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SortingOrder::Alphabetical => write!(f, "Alphabetical"),
+            SortingOrder::ReverseAlphabetical => write!(f, "Reverse Alphabetical"),
+            SortingOrder::DateCreatedMostRecent => write!(f, "Date Created Most Recent"),
+            SortingOrder::DateCreatedLeastRecent => write!(f, "Date Created Least Recent"),
+            SortingOrder::DateModifiedMostRecent => write!(f, "Date Modified Most Recent"),
+            SortingOrder::DateModifiedLeastRecent => write!(f, "Date Modified Least Recent"),
+        }
     }
 }
 
