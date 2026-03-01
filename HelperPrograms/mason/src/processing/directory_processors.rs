@@ -63,7 +63,7 @@ pub(super) fn process_directory_in_order_of_sorting_algorithm(
 
         if potential_file_type.is_err() {
             eprintln!(
-                "Error determining file type for entry: {:?}. Skipping...",
+                "ERROR DETERMINING FILE TYPE FOR ENTRY: {:?}. SKIPPING...",
                 entry.file_name()
             );
             continue;
@@ -303,7 +303,7 @@ fn directory_processor_setup(
 
         verbose_log("PRINTING WARNING MESSAGE");
         eprintln!(
-            "Warning: recursion depth limit reached. Skipping directory processing of {:?}",
+            "Warning: Recursion depth limit reached. Skipping directory processing of {:?}",
             path
         );
 
@@ -337,7 +337,7 @@ fn get_all_entries(read_dir: &mut ReadDir, entries: &mut Vec<DirEntry>) {
                 verbose_log("ENTRY ADDED SUCCESSFULLY");
             }
             Err(error) => eprintln!(
-                "Error: error reading directory entry:\n{:?}.\nSkipping",
+                "ERROR: ERROR READING DIRECTORY ENTRY:\n{:?}.\nSKIPPING",
                 error
             ),
         }
@@ -475,7 +475,7 @@ fn file_group_processor(
             let potential_file_name = os_file_name.to_str();
             if potential_file_name.is_none() {
                 eprintln!(
-                    "Error: could not convert file name to string for entry: {:?}. Skipping...",
+                    "ERROR: COULD NOT CONVERT FILE NAME TO STRING FOR ENTRY: {:?}. SKIPPING...",
                     entry
                 );
                 return None;

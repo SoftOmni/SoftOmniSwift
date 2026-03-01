@@ -31,7 +31,7 @@ where
     let potential_child_read_dir = directory_entry.path().read_dir();
     if potential_child_read_dir.is_err() {
         eprintln!(
-            "Error opening child directory: {:?}. Skipping",
+            "ERROR OPENING CHILD DIRECTORY: {:?}. SKIPPING",
             directory_entry.file_name()
         );
         return 0;
@@ -44,7 +44,7 @@ where
     if potential_file_name_str.is_none() {
         // This should never happen
         eprintln!(
-            "Error converting file name to string for entry: {:?}. Skipping",
+            "ERROR CONVERTING FILE NAME TO STRING FOR ENTRY: {:?}. SKIPPING",
             directory_entry.file_name()
         );
         return 0;
@@ -128,7 +128,7 @@ pub(super) fn gather_consecutive_file_group(
         is_file_name_str_none = potential_file_name_str.is_none();
 
         if file_type.is_err() {
-            eprintln!("Error getting file type for entry: {:?}. Skipping", entry);
+            eprintln!("ERROR GETTING FILE TYPE FOR ENTRY: {:?}. SKIPPING", entry);
             *index += 1;
             continue;
         };
@@ -137,7 +137,7 @@ pub(super) fn gather_consecutive_file_group(
 
         if is_file_name_str_none {
             eprintln!(
-                "Error converting file name to string for entry: {:?}. Skipping...",
+                "ERROR CONVERTING FILE NAME TO STRING FOR ENTRY: {:?}. SKIPPING...",
                 entry.file_name()
             );
 
@@ -225,7 +225,7 @@ pub(super) fn gather_consecutive_file_group(
         let file_type = entry.file_type();
         if file_type.is_err() {
             eprintln!(
-                "Error getting file type for entry: {:?}. Skipping...",
+                "ERROR GETTING FILE TYPE FOR ENTRY: {:?}. SKIPPING...",
                 entry
             );
             *index += 1;
@@ -247,7 +247,7 @@ pub(super) fn gather_consecutive_file_group(
 
         if potential_file_name_str.is_none() {
             eprintln!(
-                "Error getting file name for entry: {:?}. Skipping...",
+                "ERROR GETTING FILE NAME FOR ENTRY: {:?}. SKIPPING...",
                 entry
             );
             *index += 1;
@@ -377,7 +377,7 @@ pub(super) fn write_buffer_to_file(buffer: &mut String, path: &Path) -> FileWrit
     let potential_file = File::create(meson_path.as_path());
     if potential_file.is_err() {
         eprintln!(
-            "Error failed to create meson.build file at path for directory {}:\n{}",
+            "ERROR FAILED TO CREATE meson.build FILE AT PATH FOR DIRECTORY {}:\n{}",
             path.display(),
             meson_path.to_str().unwrap_or("UNKNOWN PATH")
         );
@@ -393,7 +393,7 @@ pub(super) fn write_buffer_to_file(buffer: &mut String, path: &Path) -> FileWrit
 
     if write_result.is_err() {
         eprintln!(
-            "Error failed to write buffer to meson.build file at path: {}",
+            "ERROR FAILED TO WRITE BUFFER TO meson.build FILE AT PATH: {}",
             path.display()
         );
         return FileWriteResult::Failure;

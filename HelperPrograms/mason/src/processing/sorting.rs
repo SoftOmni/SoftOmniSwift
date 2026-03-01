@@ -88,9 +88,9 @@ where
                 }
                 (Ok(_), Err(rhs_time_error)) => {
                     eprintln!(
-                        "Error: fetching the {} for the file {} failed, therefore {} \
-                            will be considered last in ordering compared to entries without issues\n\
-                            the error that happened was {}",
+                        "ERROR: FETCHING THE {} FOR THE FILE {} FAILED, THEREFORE {} \
+                            WILL BE CONSIDERED LAST IN ORDERING COMPARED TO ENTRIES WITHOUT ISSUES\n\
+                            THE ERROR THAT HAPPENED WAS {}",
                         &time_field_name,
                         &rhs_entry.path().display(),
                         &rhs_entry.path().display(),
@@ -100,9 +100,9 @@ where
                 }
                 (Err(lhs_time_error), Ok(_)) => {
                     eprintln!(
-                        "Error: fetching the {} for the file {} failed, therefore {} \
-                            will be considered last in ordering compared to entries without issues\n\
-                            the error that happened was {}",
+                        "ERROR: FETCHING THE {} FOR THE FILE {} FAILED, THEREFORE {} \
+                            WILL BE CONSIDERED LAST IN ORDERING COMPARED TO ENTRIES WITHOUT ISSUES\n\
+                            THE ERROR THAT HAPPENED WAS {}",
                         &time_field_name,
                         &lhs_entry.path().display(),
                         &lhs_entry.path().display(),
@@ -112,9 +112,9 @@ where
                 }
                 (Err(lhs_time_error), Err(rhs_time_error)) => {
                     eprintln!(
-                        "Error: fetching the {} for the files {} and {} failed, therefore they \
-                             will be considered equal but last overall in ordering compared to entries without issues\n\
-                             the errors that happened were \n{} and \n{} respectively.",
+                        "ERROR: FETCHING THE {} FOR THE FILES {} AND {} FAILED, THEREFORE THEY \
+                             WILL BE CONSIDERED EQUAL BUT LAST OVERALL IN ORDERING COMPARED TO ENTRIES WITHOUT ISSUES\n\
+                             THE ERRORS THAT HAPPENED WERE \n{} AND \n{} RESPECTIVELY.",
                         &time_field_name,
                         &lhs_entry.path().display(),
                         &rhs_entry.path().display(),
@@ -127,8 +127,8 @@ where
         }
         (Ok(_), Err(rhs_metadata_error)) => {
             eprintln!(
-                "Error: fetching the metadata for the file {} failed, therefore {} will be considered last in ordering compared to entries without issues\n\
-                    the error that happened was {}",
+                "ERROR: FETCHING THE METADATA FOR THE FILE {} FAILED, THEREFORE {} WILL BE CONSIDERED LAST IN ORDERING COMPARED TO ENTRIES WITHOUT ISSUES\n\
+                    THE ERROR THAT HAPPENED WAS {}",
                 &rhs_entry.path().display(),
                 &rhs_entry.path().display(),
                 rhs_metadata_error
@@ -137,8 +137,8 @@ where
         }
         (Err(lhs_metadata_error), Ok(_)) => {
             eprintln!(
-                "Error: fetching the metadata for the file {} failed, therefore {} will be considered last in ordering compared to entries without issues\n\
-                    the error that happened was {}",
+                "ERROR: FETCHING THE METADATA FOR THE FILE {} FAILED, THEREFORE {} WILL BE CONSIDERED LAST IN ORDERING COMPARED TO ENTRIES WITHOUT ISSUES\n\
+                    THE ERROR THAT HAPPENED WAS {}",
                 &lhs_entry.path().display(),
                 &lhs_entry.path().display(),
                 lhs_metadata_error
@@ -147,8 +147,8 @@ where
         }
         (Err(lhs_metadata_error), Err(rhs_metadata_error)) => {
             eprintln!(
-                "Error: fetching the metadata for the files {} and {} failed, therefore {} and {} will be considered equal in ordering compared to entries without issues\n\
-                    the errors that happened were \n{} and \n{} respectively",
+                "ERROR: FETCHING THE METADATA FOR THE FILES {} AND {} FAILED, THEREFORE {} AMD {} WILL BE CONSIDERED EQUAL IN ORDERING COMPARED TO ENTRIES WITHOUT ISSUES\n\
+                    THE ERRORS THAT HAPPENED WERE \n{} AND \n{} RESPECTIVELY",
                 &lhs_entry.path().display(),
                 &rhs_entry.path().display(),
                 &lhs_entry.path().display(),

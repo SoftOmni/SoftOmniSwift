@@ -14,9 +14,9 @@ pub(super) fn process_root_directory(arguments: &arguments::Arguments, path: &Pa
     let result = path.read_dir();
     if result.is_err() {
         eprintln!(
-            "Error: skipping directory {} as an error occurred \
-             when attempting to retrieve its children.\n\
-             The error was: {}",
+            "ERROR: SKIPPING DIRECTORY {} AS AN ERROR OCCURRED \
+             WHEN ATTEMPTING TO RETRIEVE ITS CHILDREN\n\
+             THE ERROR WAS: {}",
             path.to_str().unwrap(),
             result.err().unwrap()
         );
@@ -70,12 +70,12 @@ pub(super) fn process_file(arguments: &arguments::Arguments) -> usize {
         let potential_name = path_buffer.to_str();
 
         if potential_name.is_none() {
-            eprintln!("Error: the parent directory of the file was removed after argument parsing");
+            eprintln!("ERROR: THE PARENT DIRECTORY OF THE FILE WAS REMOVED AFTER ARGUMENT PARSING");
             return 0;
         }
 
         eprintln!(
-            "Error: the parent directory of the file {} was removed after argument parsing",
+            "ERROR: THE PARENT DIRECTORY OF THE FILE {} WAS REMOVED AFTER ARGUMENT PARSING",
             potential_name.unwrap()
         );
         return 0;
@@ -93,7 +93,7 @@ pub(super) fn process_file(arguments: &arguments::Arguments) -> usize {
     let potential_directory_reader = parent_buffer.read_dir();
     if potential_directory_reader.is_err() {
         eprintln!(
-            "Error: failed to read directory contents of parent directory {} because of {:?}",
+            "ERROR: FAILED TO READ DIRECTORY CONTENTS OF PARENT DIRECTORY {} BECAUSE OF {:?}",
             parent_buffer.display(),
             potential_directory_reader.unwrap_err()
         );
