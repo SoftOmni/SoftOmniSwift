@@ -1,4 +1,4 @@
-&commat;echo off
+@echo off
 
 setlocal EnableExtensions EnableDelayedExpansion
 
@@ -27,18 +27,18 @@ where /q meson
 if errorlevel 1 (
   call :info "MESON BUILD SYSTEM IS NOT INSTALLED"
   call :info "ATTEMPTING TO INSTALL MESON"
-  call :info "CHECKING IF PYTHON'S PIP TOOL IS INSTALLED AS pip3"
-
-  where /q pip3
+  call :info "CHECKING FOR A WORKING PIP COMMAND"
+  call :find_pip
   if errorlevel 1 (
-    call :error "PYTHON'S PIP TOOL IS NOT INSTALLED AS pip3"
+    call :error "NO WORKING PIP COMMAND FOUND"
+    call :error "TRIED: pip, pip3, py -m pip, python -m pip, python3 -m pip"
     call :error "ABORTING ALL"
     exit /b 10
   )
 
-  call :ok "PYTHON'S PIP TOOL IS INSTALLED"
+  call :ok "FOUND PIP AS: !PIP_CMD!"
   call :info "INSTALLING MESON THROUGH PIP"
-  pip3 install --user meson
+  !PIP_CMD! install --user meson
   if errorlevel 1 (
     call :error "PIP FAILED TO INSTALL MESON...ABORTING"
     exit /b 11
@@ -46,8 +46,8 @@ if errorlevel 1 (
 
   where /q meson
   if errorlevel 1 (
-    call :error "MESON FAILED TO INSTALL (MESON STILL NOT ON PATH)...ABORTING"
-    call :warning "You may need to reopen the terminal or add your Python user scripts directory to PATH."
+    call :warning "MESON WAS INSTALLED BUT IS NOT ON PATH"
+    call :warning "ADD YOUR PYTHON USER SCRIPTS DIRECTORY TO PATH, REOPEN THE TERMINAL, AND RUN setup.bat AGAIN"
     exit /b 11
   ) else (
     call :ok "MESON IS INSTALLED SUCCESSFULLY"
@@ -139,3 +139,46 @@ exit /b 0
 :ok
 call :print "%GREEN%" "OK" "%~1"
 exit /b 0
+
+:find_pip
+where /q pip
+if not errorlevel 1 (
+  set "PIP_CMD=pip"
+  call :debug "FOUND PIP COMMAND: pip"
+  exit /b 0
+)
+where /q pip3
+if not errorlevel 1 (
+  set "PIP_CMD=pip3"
+  call :debug "FOUND PIP COMMAND: pip3"
+  exit /b 0
+)
+where /q py
+if not errorlevel 1 (
+  py -m pip --version >nul 2>&1
+  if not errorlevel 1 (
+    set "PIP_CMD=py -m pip"
+    call :debug "FOUND PIP COMMAND: py -m pip"
+    exit /b 0
+  )
+)
+where /q python
+if not errorlevel 1 (
+  python -m pip --version >nul 2>&1
+  if not errorlevel 1 (
+    set "PIP_CMD=python -m pip"
+    call :debug "FOUND PIP COMMAND: python -m pip"
+    exit /b 0
+  )
+)
+where /q python3
+if not errorlevel 1 (
+  python3 -m pip --version >nul 2>&1
+  if not errorlevel 1 (
+    set "PIP_CMD=python3 -m pip"
+    call :debug "FOUND PIP COMMAND: python3 -m pip"
+    exit /b 0
+  )
+)
+set "PIP_CMD="
+exit /b 1

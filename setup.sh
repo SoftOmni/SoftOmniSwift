@@ -28,7 +28,7 @@ print() {
   text=$1
   message_type=$3
 
-  printf "%s %s: $text %s" "$color" "$message_type" "$NO_COLOR"
+  printf "%s %s: $text %s\n" "$color" "$message_type" "$NO_COLOR"
 }
 
 print_error() {
@@ -55,25 +55,38 @@ print_info "CHECKING IF THE MESON BUILD TOOL IS INSTALLED"
 if ! command -v meson >/dev/null 2>&1; then
   print_info "MESON BUILD SYSTEM IS NOT INSTALLED"
   print_info "ATTEMPTING TO INSTALL MESON"
-  print_info "CHECKING IF PYTHON'S PIP TOOL IS INSTALLED AS pip3"
-  if ! command -v pip3 >/dev/null 2>&1; then
-    print_error "PYTHON'S PIP TOOL IS NOT INSTALLED AS pip3"
+  print_info "CHECKING FOR A WORKING PIP COMMAND"
+  PIP_CMD=""
+  if command -v pip3 >/dev/null 2>&1; then
+    PIP_CMD="pip3"
+  elif command -v python3 >/dev/null 2>&1 && python3 -m pip --version >/dev/null 2>&1; then
+    PIP_CMD="python3 -m pip"
+  elif command -v pip >/dev/null 2>&1; then
+    PIP_CMD="pip"
+  elif command -v python >/dev/null 2>&1 && python -m pip --version >/dev/null 2>&1; then
+    PIP_CMD="python -m pip"
+  fi
+
+  if [ -z "$PIP_CMD" ]; then
+    print_error "NO WORKING PIP COMMAND FOUND"
+    print_error "TRIED: pip3, python3 -m pip, pip, python -m pip"
     print_error "ABORTING ALL"
     exit 10
   fi
 
-  print_good "PYTHON'S PIP TOOL IS INSTALLED"
+  print_good "FOUND PIP AS: $PIP_CMD"
   print_info "INSTALLING MESON THROUGH PIP"
-  pip3 install --user meson
+  $PIP_CMD install --user meson
 
   if command -v meson >/dev/null 2>&1; then
     print_good "MESON IS INSTALLED SUCCESSFULLY"
   else
-    print_error "MESON FAILED TO INSTALL...ABORTING"
+    print_warning "MESON WAS INSTALLED BUT IS NOT ON PATH"
+    print_warning "ADD YOUR PYTHON USER SCRIPTS DIRECTORY TO PATH, REOPEN THE TERMINAL, AND RUN setup.sh AGAIN"
     exit 11
   fi
 else
-  print_good "MASON IS INSTALLED ON THE SYSTEM"
+  print_good "MESON IS INSTALLED ON THE SYSTEM"
 fi
 
 print_debug "CALCULATING PATH TO SUBPROJECTS SUB-DIRECTORY..."
