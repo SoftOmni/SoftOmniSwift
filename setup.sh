@@ -5,12 +5,11 @@ YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 LIGHT_GRAY='\033[0;33m'
-NO_COLOR='\033[0m'
 
 print() {
   if [ ! -n "$2" ]; then
     print_error "NO ARGUMENT PROVIDED TO PRINT FOR ERROR"
-    exit 2
+   exit 2
   fi
 
   color=$2
@@ -28,7 +27,7 @@ print() {
   text=$1
   message_type=$3
 
-  printf "%s %s: $text %s" "$color" "$message_type" "$NO_COLOR"
+  printf "%s %s: $text %s\n" "$color" "$message_type" "$NO_COLOR"
 }
 
 print_error() {
@@ -48,87 +47,28 @@ print_debug() {
 }
 
 print_good() {
-  print "$1" "$GREEN" "OK"
+    print "$1" "$GREEN" "OK"
 }
 
-print_info "CHECKING IF THE MESON BUILD TOOL IS INSTALLED"
-if ! command -v meson >/dev/null 2>&1; then
-  print_info "MESON BUILD SYSTEM IS NOT INSTALLED"
-  print_info "ATTEMPTING TO INSTALL MESON"
-  print_info "CHECKING IF PYTHON'S PIP TOOL IS INSTALLED AS pip3"
-  if ! command -v pip3 >/dev/null 2>&1; then
-    print_error "PYTHON'S PIP TOOL IS NOT INSTALLED AS pip3"
-    print_error "ABORTING ALL"
-    exit 10
-  fi
+check_package() {
+    if [ ! -n "$1" ]; then
+        print_error "NO ARGUMENT PROVIDED TO CHECK PACKAGE"
+        exit 2
+    fi
 
-  print_good "PYTHON'S PIP TOOL IS INSTALLED"
-  print_info "INSTALLING MESON THROUGH PIP"
-  pip3 install --user meson
+    package="$1"
+    print_info "Checking if $package is installed and on PATH...\n"
+    if command -v "$package" >/dev/null 2>&1; then
+        print_good "$package" "is found continuning ...\n"
+    else
+        print_error "$package not is found"
+        print_warning "Install $package with either apt/dnf/pacman/brew/ports"
+        print_warning "    (any other way as long as we check it on the PATH)"
+        exit 1
+    fi
+    
+}
 
-  if command -v meson >/dev/null 2>&1; then
-    print_good "MESON IS INSTALLED SUCCESSFULLY"
-  else
-    print_error "MESON FAILED TO INSTALL...ABORTING"
-    exit 11
-  fi
-else
-  print_good "MASON IS INSTALLED ON THE SYSTEM"
-fi
-
-print_debug "CALCULATING PATH TO SUBPROJECTS SUB-DIRECTORY..."
-subprojects_directory="$(
-  cd -- "$(dirname "$0")" >/dev/null 2>&1 || print_info "COULD NOT RETRIEVE ABSOLUTE PATH...MAKING ASSUMPTION THAT THE SUBPROJECTS DIRECTORY IS ./subprojects"
-  pwd -P
-)/subprojects"
-
-print_info "CHECKING IF SUBPROJECTS DIRECTORY '$subprojects_directory' EXISTS..."
-if [ ! -d "$subprojects_directory" ]; then
-  print_info "SUBPROJECTS DIRECTORY DOES NOT EXIST"
-  print_info "CREATING SUBPROJECTS DIRECTORY"
-  mkdir "$subprojects_directory"
-
-  if [ ! -d "$subprojects_directory" ]; then
-    print_error "COULD NOT CREATE '$subprojects_directory' DIRECTORY...EXITING."
-    exit 3
-  fi
-
-  print_good "SUBPROJECTS DIRECTORY CREATED"
-else
-  print_info "SUBPROJECTS DIRECTORY EXISTS"
-fi
-
-print_info "SETTING UP GTEST..."
-meson wrap install gtest
-
-print_info "CHECKING IF GTEST INSTALLED IN DIRECTORY"
-
-directory_search="$subprojects_directory/*"
-
-found="FALSE"
-for FILE in $directory_search; do
-  case $FILE in
-  *"googletest"*)
-      found="TRUE"
-      print_good "GTEST FOUND"
-      break
-    ;;
-  esac
-done
-
-if [ "$found" = "FALSE" ]; then
-  print_error "GTEST NOT FOUND"
-  print_error "ABORTING..."
-  exit 4
-fi
-
-print_info "INVOKING MESON CONFIGURATION"
-if meson setup buildDir --reconfigure; then
-  print_good "ALL SETUP"
-  print_good "HAPPY CODING!"
-  exit 0
-fi
-
-print_error "SOMETHING FAILED :("
-print_warning "MAYBE THE LOGS COULD PROVE USEFUL :)"
-exit 20
+check_package "python"
+check_package "clang"
+./setup.py
