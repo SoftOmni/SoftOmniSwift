@@ -1,0 +1,4 @@
+
+sources += files(
+    'node.cc'
+)

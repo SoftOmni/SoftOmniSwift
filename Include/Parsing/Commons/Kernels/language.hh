@@ -16,6 +16,10 @@ namespace SoftOmni::Parsing::Commons::Kernels
 
         std::string display_name_;
 
+        std::size_t softomni_format_codepoint_;
+
+        std::size_t softomni_format_codepoint_complement_;
+
         std::unordered_map<std::string, LanguageFrontend*> language_frontends_;
 
         std::optional<std::reference_wrapper<LanguageFrontend>> reference_frontend_;
@@ -23,15 +27,19 @@ namespace SoftOmni::Parsing::Commons::Kernels
         static std::unordered_map<std::string, Language*> languages_;
 
     public:
-        explicit Language(const std::string& name);
+        explicit Language(const std::string& name, std::size_t softomni_format_codepoint, std::size_t softomni_format_codepoint_complement);
 
-        explicit Language(const std::string& name, std::string display_name);
+        explicit Language(const std::string& name, std::string display_name, std::size_t softomni_format_codepoint, std::size_t softomni_format_codepoint_complement);
 
         [[nodiscard]] const std::string& name() const;
 
         [[nodiscard]] const std::string& display_name() const;
 
         void set_display_name(std::string new_display_name);
+
+        [[nodiscard]] std::size_t softomni_format_codepoint() const;
+
+        [[nodiscard]] std::size_t softomni_format_codepoint_complement() const;
 
         std::optional<std::reference_wrapper<LanguageFrontend>> operator[](const std::string& name) const;
 

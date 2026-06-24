@@ -1,0 +1,10 @@
+CompileFlags:
+  Add:
+    - Wall
+    - Wextra
+    - pedantic
+    - Wvla
+    - Wold-style-cast
+    - Werror
+    - std=c++23
+    - IInclude
